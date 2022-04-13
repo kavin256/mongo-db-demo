@@ -68,27 +68,27 @@ router.get('/', (req, res, next) => {
   //   );
   // }
   MongoClient.connect('mongodb+srv://kavin:diqj1sydXDQZpR2H@cluster0.yw6gn.mongodb.net/shop?retryWrites=true&w=majority')
-  .then(client => {
-    const products = [];
-    client.db()
-    .collection('products')
-      .find()
-      .forEach(productDoc => {
-      // transform the price
-      productDoc.price = productDoc.price.toString();
-      products.push(productDoc)
+    .then(client => {
+      const products = [];
+      client.db()
+        .collection('products')
+        .find()
+        .forEach(productDoc => {
+          // transform the price
+          productDoc.price = productDoc.price.toString();
+          products.push(productDoc)
+        })
+        .then(result => {
+          res.status(201).json(products);
+          client.close();
+        }).catch(err => {
+          console.log(err);
+          res.status(500)
+            .json({ message: 'An error occured' });
+          client.close();
+        });
     })
-    .then(result => {
-      res.status(201).json(products);
-      client.close();
-    }).catch(err => {
-      console.log(err);
-      res.status(500)
-        .json({ message: 'An error occured' });
-      client.close();
-    });
-  })
-  .catch(err => console.log(err));
+    .catch(err => console.log(err));
   // res.json(resultProducts);
 });
 
@@ -107,23 +107,23 @@ router.post('', (req, res, next) => {
     price: Decimal128.fromString(req.body.price.toString()), // store this as 128bit decimal in MongoDB
     image: req.body.image
   };
-  
+
   MongoClient.connect('mongodb+srv://kavin:diqj1sydXDQZpR2H@cluster0.yw6gn.mongodb.net/shop?retryWrites=true&w=majority')
-  .then(client => {
-    client.db()
-    .collection('products')
-    .insertOne(newProduct)
-    .then(result => {
-      console.log(result)
-      res.status(201).json({ message: 'Product added', productId: 'DUMMY' });
-      client.close();
-    }).catch(err => {
-      console.log(err);
-      res.status(500).json({ message: 'An error occured'});
-      client.close();
-    });
-  })
-  .catch(err => console.log(err));
+    .then(client => {
+      client.db()
+        .collection('products')
+        .insertOne(newProduct)
+        .then(result => {
+          console.log(result)
+          res.status(201).json({ message: 'Product added', productId: 'DUMMY' });
+          client.close();
+        }).catch(err => {
+          console.log(err);
+          res.status(500).json({ message: 'An error occured' });
+          client.close();
+        });
+    })
+    .catch(err => console.log(err));
 
 });
 
