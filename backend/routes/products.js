@@ -72,19 +72,19 @@ router.get('/', (req, res, next) => {
     const products = [];
     client.db()
     .collection('products')
-    .find().forEach(productDoc => {
+      .find()
+      .forEach(productDoc => {
       // transform the price
       productDoc.price = productDoc.price.toString();
       products.push(productDoc)
     })
     .then(result => {
-      res.status(201)
-      .json(products);
+      res.status(201).json(products);
       client.close();
     }).catch(err => {
       console.log(err);
       res.status(500)
-      .json({ message: 'An error occured'});
+        .json({ message: 'An error occured' });
       client.close();
     });
   })
