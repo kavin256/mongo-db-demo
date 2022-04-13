@@ -7,5 +7,5 @@ How to use
 
 
 Extras:
-password for mongodb cluster0
+password for mongodb cluster0 for user kavin
 diqj1sydXDQZpR2H
